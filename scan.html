@@ -76,65 +76,75 @@
   <section class="card p-8">
     <h2 class="text-xl font-bold mb-2">Submit Your Scan Request</h2>
     <p class="text-slate-500 mb-6">Already paid? Fill in your details below and paste your M-Pesa confirmation message.</p>
-    <form id="scan-form" class="grid md:grid-cols-2 gap-4">
+    <form id="scan-form" action="https://formspree.io/f/mykaakjl" method="POST" class="grid md:grid-cols-2 gap-4">
       <div>
         <label class="text-sm font-medium block mb-1">Full Name *</label>
-        <input type="text" id="scan-name" class="w-full border rounded-lg px-3 py-2" required />
+        <input type="text" id="scan-name" name="name" class="w-full border rounded-lg px-3 py-2" required />
       </div>
       <div>
         <label class="text-sm font-medium block mb-1">Company Name *</label>
-        <input type="text" id="scan-company" class="w-full border rounded-lg px-3 py-2" required />
+        <input type="text" id="scan-company" name="company" class="w-full border rounded-lg px-3 py-2" required />
       </div>
       <div>
         <label class="text-sm font-medium block mb-1">Email Address *</label>
-        <input type="email" id="scan-email" class="w-full border rounded-lg px-3 py-2" required />
+        <input type="email" id="scan-email" name="email" class="w-full border rounded-lg px-3 py-2" required />
       </div>
       <div>
         <label class="text-sm font-medium block mb-1">Phone Number *</label>
-        <input type="tel" id="scan-phone" class="w-full border rounded-lg px-3 py-2" required />
+        <input type="tel" id="scan-phone" name="phone" class="w-full border rounded-lg px-3 py-2" required />
       </div>
       <div class="md:col-span-2">
         <label class="text-sm font-medium block mb-1">Website URL to Scan *</label>
-        <input type="url" id="scan-url" placeholder="https://example.com" class="w-full border rounded-lg px-3 py-2" required />
+        <input type="url" id="scan-url" name="website_url" placeholder="https://example.com" class="w-full border rounded-lg px-3 py-2" required />
       </div>
       <div class="md:col-span-2">
         <label class="text-sm font-medium block mb-1">M-Pesa Confirmation Message *</label>
-        <textarea id="scan-confirmation" rows="3" placeholder="Paste the full M-Pesa confirmation SMS here" class="w-full border rounded-lg px-3 py-2" required></textarea>
+        <textarea id="scan-confirmation" name="mpesa_confirmation" rows="3" placeholder="Paste the full M-Pesa confirmation SMS here" class="w-full border rounded-lg px-3 py-2" required></textarea>
       </div>
+      <input type="hidden" name="_subject" value="Website Security Snapshot — Scan Request" />
       <div class="md:col-span-2">
-        <button type="submit" class="btn-primary w-full">Submit Scan Request</button>
+        <button type="submit" id="scan-submit-btn" class="btn-primary w-full">Submit Scan Request</button>
       </div>
     </form>
-    <p id="scan-confirm-msg" class="hidden text-sm text-green-600 mt-4">Thanks! Your scan request has been sent — we'll email your report within 24 hours.</p>
+    <p id="scan-confirm-msg" class="hidden text-sm text-green-600 mt-4">Thanks! Your scan request has been received — we'll email your report within 24 hours.</p>
+    <p id="scan-error-msg" class="hidden text-sm text-red-500 mt-4">Something went wrong submitting your request. Please try again or message us on WhatsApp.</p>
   </section>
 
 </main>
 
 <script src="app.js?v=2"></script>
 <script>
-document.getElementById('scan-form').addEventListener('submit', (e) => {
+document.getElementById('scan-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const form = e.target;
+  const submitBtn = document.getElementById('scan-submit-btn');
+  const confirmMsg = document.getElementById('scan-confirm-msg');
+  const errorMsg = document.getElementById('scan-error-msg');
 
-  const name = document.getElementById('scan-name').value;
-  const company = document.getElementById('scan-company').value;
-  const email = document.getElementById('scan-email').value;
-  const phone = document.getElementById('scan-phone').value;
-  const url = document.getElementById('scan-url').value;
-  const confirmation = document.getElementById('scan-confirmation').value;
+  confirmMsg.classList.add('hidden');
+  errorMsg.classList.add('hidden');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
 
-  const body = `Website Security Snapshot — Scan Request
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { Accept: 'application/json' }
+    });
 
-Name: ${name}
-Company: ${company}
-Email: ${email}
-Phone: ${phone}
-Website URL: ${url}
-
-M-Pesa Confirmation Message:
-${confirmation}`;
-
-  window.location.href = App.mailtoLink('Website Security Snapshot — Scan Request', body);
-  document.getElementById('scan-confirm-msg').classList.remove('hidden');
+    if (response.ok) {
+      form.reset();
+      confirmMsg.classList.remove('hidden');
+    } else {
+      errorMsg.classList.remove('hidden');
+    }
+  } catch (err) {
+    errorMsg.classList.remove('hidden');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Scan Request';
+  }
 });
 </script>
 </body>
