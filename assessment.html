@@ -6,6 +6,14 @@
 <title>Secure360 Assessment — Wakara Technologies</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="styles.css?v=2" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M32DJF8H6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-M32DJF8H6D');
+</script>
 </head>
 <body class="min-h-screen">
 
@@ -14,11 +22,21 @@
     <span class="text-2xl">🛡️</span>
     <span class="font-bold text-lg">Wakara <span class="gradient-text">Secure360</span></span>
   </a>
-  <div id="live-score" class="hidden items-center gap-3 font-semibold">
-    <span class="text-sm text-slate-500">Live Score</span>
-    <span id="live-score-value" class="text-2xl text-blue-600 score-pop">0</span>
+  <div class="flex items-center gap-4">
+    <div id="google_translate_element" class="text-sm"></div>
+    <div id="live-score" class="hidden items-center gap-3 font-semibold">
+      <span class="text-sm text-slate-500">Live Score</span>
+      <span id="live-score-value" class="text-2xl text-blue-600 score-pop">0</span>
+    </div>
   </div>
 </nav>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'en,sw,fr' }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <main class="max-w-4xl mx-auto px-6 pb-20">
 
@@ -53,9 +71,9 @@
   <section id="badge-toast-container"></section>
 </main>
 
-<script src="scoring.js?v=2"></script>
-<script src="scenarios.js?v=2"></script>
-<script src="app.js?v=2"></script>
+<script src="assets/js/scoring.js?v=2"></script>
+<script src="assets/js/scenarios.js?v=2"></script>
+<script src="assets/js/app.js?v=2"></script>
 <script>
 let data, scoreState, currentIndex = 0, selectedOption = null, persona = null;
 
