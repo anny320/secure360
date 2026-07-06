@@ -19,19 +19,20 @@ A free interactive cybersecurity, AI governance, and digital resilience assessme
 ## Structure
 
 ```
-index.html
-assessment.html
-report.html
-assets/
-  css/styles.css
-  js/
-    app.js          # session persistence, shared helpers
-    scenarios.js     # loads scenario data
-    scoring.js        # scoring engine (people/process/technology/data/AI pillars)
-    charts.js          # Chart.js radar + bar chart renderers
-    pdf.js               # jsPDF report builder
-    leadcapture.js        # lead form validation + storage
-data/scenarios.json   # personas, scenarios, badges, risk levels
+index.html          # landing page
+assessment.html     # assessment flow
+report.html         # results dashboard + PDF report
+scan.html           # website security snapshot
+styles.css          # shared styles
+app.js              # session persistence, shared helpers
+scenarios.js        # loads scenario data
+scoring.js          # scoring engine (people/process/technology/data/AI pillars)
+charts.js           # Chart.js radar + bar chart renderers
+pdf.js              # jsPDF report builder
+leadcapture.js      # lead form validation + storage
+scannerworker.js    # Cloudflare Worker for the security scanner
+scenarios.json      # personas, scenarios, badges, risk levels
+.nojekyll           # prevents Jekyll processing on GitHub Pages
 ```
 
 ## Running Locally
@@ -46,4 +47,8 @@ Then open `http://localhost:8000`.
 
 ## Deployment
 
-Designed for GitHub Pages — push to the `main` branch (or configure Pages to serve from your default branch) with no build step needed.
+Designed for GitHub Pages — push to the `main` branch and enable Pages in repo Settings → Pages → Source: Deploy from branch (`main`, root `/`). No build step needed.
+
+The `.nojekyll` file at the root ensures GitHub Pages serves the static files directly without Jekyll preprocessing.
+
+Live site: `https://anny320.github.io/secure360/`
