@@ -16,130 +16,517 @@
   gtag('js', new Date());
   gtag('config', 'G-M32DJF8H6D');
 </script>
-</head>
-<body class="min-h-screen">
+<style>
+  :root {
+    --risk-critical: #DC2626;
+    --risk-high: #EA580C;
+    --risk-medium: #D97706;
+    --risk-low: #16A34A;
+  }
 
-<nav class="px-6 py-5 max-w-7xl mx-auto flex items-center justify-between">
-  <a href="index.html" class="flex items-center gap-2">
-    <span class="text-2xl">🛡️</span>
-    <span class="font-bold text-lg">Wakara <span class="gradient-text">Secure360</span></span>
-  </a>
-  <a href="assessment.html" class="text-sm text-blue-600 font-semibold">Retake Assessment</a>
+  /* Nav */
+  .report-nav {
+    background: #0F172A;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Hero */
+  .report-hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #1e3a5f 100%);
+    border-bottom: 3px solid #2563EB;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(37,99,235,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .report-hero-grid {
+    background-image:
+      linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Score ring */
+  .score-ring-wrap {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .score-ring-svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+  .score-ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
+  .score-ring-fill  { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Risk badge */
+  .risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 1rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .risk-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Section label */
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #2563EB;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #E2E8F0;
+  }
+
+  /* Report card */
+  .report-card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+  }
+
+  /* Category bar */
+  .cat-bar-track {
+    height: 6px;
+    background: #F1F5F9;
+    border-radius: 99px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.8s ease;
+  }
+
+  /* Risk level indicator pill */
+  .level-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* Form inputs */
+  .report-input {
+    width: 100%;
+    border: 1px solid #CBD5E1;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+    color: #0F172A;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: #FAFAFA;
+  }
+  .report-input:focus {
+    outline: none;
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    background: #fff;
+  }
+
+  /* Service tier cards */
+  .tier-card {
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .tier-card:hover {
+    box-shadow: 0 8px 24px -8px rgba(37,99,235,0.18);
+    transform: translateY(-2px);
+  }
+  .tier-card.featured {
+    border: 2px solid #2563EB;
+    background: linear-gradient(160deg, #EFF6FF 0%, #fff 60%);
+    position: relative;
+  }
+  .tier-badge {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2563EB;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.75rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tier-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #475569;
+    padding: 0.25rem 0;
+  }
+  .tier-check::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #DBEAFE;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%232563EB'%3E%3Cpath d='M6.5 11.5L3 8l1-1 2.5 2.5 5-5 1 1z'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* CTA bar */
+  .cta-bar {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Badges */
+  .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  /* Stat tile */
+  .stat-tile {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    text-align: center;
+  }
+
+  /* Print-style divider */
+  .report-divider {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 0;
+  }
+
+  /* Confidential footer */
+  .conf-footer {
+    background: #0F172A;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.35);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 1rem;
+  }
+</style>
+</head>
+<body style="background:#F1F5F9; min-height:100vh;">
+
+<!-- Nav -->
+<nav class="report-nav px-6 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <span class="text-xl">🛡️</span>
+      <span class="font-bold text-white text-base tracking-tight">Wakara <span class="gradient-text">Secure360</span></span>
+    </a>
+    <div class="flex items-center gap-4">
+      <span class="text-xs text-slate-400 hidden sm:block">CONFIDENTIAL SECURITY ASSESSMENT</span>
+      <a href="assessment.html" class="text-xs text-blue-400 font-semibold border border-blue-800 rounded px-3 py-1.5 hover:bg-blue-900/30 transition">Retake Assessment</a>
+    </div>
+  </div>
 </nav>
 
-<main class="max-w-5xl mx-auto px-6 pb-20">
+<div id="no-session" class="hidden text-center py-20">
+  <p class="text-slate-500 mb-6">No assessment results found.</p>
+  <a href="assessment.html" class="btn-primary">Start Assessment</a>
+</div>
 
-  <section id="no-session" class="hidden text-center py-20">
-    <p class="text-slate-500 mb-6">No assessment results found.</p>
-    <a href="assessment.html" class="btn-primary">Start Assessment</a>
-  </section>
+<div id="dashboard" class="hidden">
 
-  <section id="dashboard" class="hidden">
-    <div class="text-center mb-10">
-      <p class="text-slate-500 mb-2">Your Secure360 Results</p>
-      <h1 id="overall-score" class="text-6xl font-extrabold mb-2">0</h1>
-      <p id="risk-label" class="inline-block px-4 py-1 rounded-full text-white font-semibold"></p>
-    </div>
+  <!-- Hero banner -->
+  <div class="report-hero px-6 py-12 relative">
+    <div class="report-hero-grid"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
 
-    <div class="grid md:grid-cols-2 gap-6 mb-10">
-      <div class="card p-6">
-        <h3 class="font-semibold mb-4 text-center">Risk Profile Radar</h3>
-        <canvas id="radarChart"></canvas>
+      <!-- Report meta row -->
+      <div class="flex flex-wrap items-center gap-3 mb-8 text-xs text-slate-400">
+        <span class="font-mono uppercase tracking-widest">Secure360 Risk Report</span>
+        <span class="text-slate-600">·</span>
+        <span id="report-date" class="font-mono"></span>
+        <span class="text-slate-600">·</span>
+        <span class="text-slate-500">Wakara Technologies</span>
       </div>
-      <div class="card p-6">
-        <h3 class="font-semibold mb-4 text-center">Category Breakdown</h3>
-        <canvas id="categoryChart"></canvas>
-      </div>
-    </div>
 
-    <div class="card p-6 mb-10">
-      <h3 class="font-semibold mb-4">Badges Earned</h3>
-      <div id="badges-container" class="flex flex-wrap gap-3"></div>
-      <p id="no-badges" class="hidden text-sm text-slate-500">Complete more scenarios well to earn badges next time!</p>
-    </div>
+      <!-- Score + stats -->
+      <div class="flex flex-col md:flex-row md:items-center gap-10">
 
-    <div class="card p-8 mb-10">
-      <h3 class="text-xl font-bold mb-4">Get Your Full PDF Report</h3>
-      <p class="text-slate-500 mb-6">Enter your details below to unlock your personalized PDF report with a full action plan.</p>
-      <form id="lead-form" class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="text-sm font-medium block mb-1">Full Name *</label>
-          <input type="text" id="lead-name" class="w-full border rounded-lg px-3 py-2" />
-          <p class="text-red-500 text-xs mt-1 hidden" id="err-name"></p>
+        <!-- Ring score -->
+        <div class="score-ring-wrap">
+          <svg class="score-ring-svg" viewBox="0 0 160 160">
+            <circle class="score-ring-track" cx="80" cy="80" r="68"/>
+            <circle id="ring-fill" class="score-ring-fill" cx="80" cy="80" r="68"
+              stroke-dasharray="427" stroke-dashoffset="427"/>
+          </svg>
+          <div class="score-ring-text">
+            <span id="overall-score" class="text-5xl font-extrabold text-white leading-none">0</span>
+            <span class="text-xs text-slate-400 mt-1 font-mono">/100</span>
+          </div>
         </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Company Name *</label>
-          <input type="text" id="lead-company" class="w-full border rounded-lg px-3 py-2" />
-          <p class="text-red-500 text-xs mt-1 hidden" id="err-company"></p>
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Email Address *</label>
-          <input type="email" id="lead-email" class="w-full border rounded-lg px-3 py-2" />
-          <p class="text-red-500 text-xs mt-1 hidden" id="err-email"></p>
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Phone Number *</label>
-          <input type="tel" id="lead-phone" class="w-full border rounded-lg px-3 py-2" />
-          <p class="text-red-500 text-xs mt-1 hidden" id="err-phone"></p>
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Website</label>
-          <input type="text" id="lead-website" class="w-full border rounded-lg px-3 py-2" />
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1"># of Employees</label>
-          <input type="text" id="lead-employees" class="w-full border rounded-lg px-3 py-2" />
-        </div>
-        <div class="md:col-span-2 grid grid-cols-2 gap-3">
-          <button type="button" id="preview-btn" class="btn-secondary w-full">Preview Report</button>
-          <button type="submit" class="btn-primary w-full">Download My PDF Report</button>
-        </div>
-      </form>
-    </div>
 
-    <div class="card p-8 mb-10">
-      <h3 class="text-xl font-bold mb-6 text-center">Talk to an Expert</h3>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="border rounded-xl p-5 flex flex-col">
-          <h4 class="font-semibold mb-2">Starter Security Review</h4>
-          <ul class="text-sm text-slate-500 space-y-1 mb-4 flex-1">
-            <li>60-minute consultation</li>
-            <li>Report review</li>
-            <li>Priority actions</li>
-          </ul>
-          <a id="quote-starter" href="#" class="btn-primary text-center text-sm mt-auto">Request a Quote</a>
+        <!-- Summary text -->
+        <div class="flex-1">
+          <div class="mb-3">
+            <p class="text-slate-400 text-sm uppercase tracking-widest font-semibold mb-2">Overall Risk Level</p>
+            <div id="risk-badge-wrap">
+              <span id="risk-label" class="risk-badge text-white">
+                <span class="risk-dot"></span>
+                <span id="risk-label-text"></span>
+              </span>
+            </div>
+          </div>
+          <p id="risk-summary" class="text-slate-300 text-sm leading-relaxed max-w-lg mt-4"></p>
         </div>
-        <div class="border-2 border-blue-600 rounded-xl p-5 flex flex-col">
-          <h4 class="font-semibold mb-2">SME Security Roadmap</h4>
-          <ul class="text-sm text-slate-500 space-y-1 mb-4 flex-1">
-            <li>Assessment review</li>
-            <li>Security roadmap</li>
-            <li>Templates</li>
-            <li>Follow-up support</li>
-          </ul>
-          <a id="quote-sme" href="#" class="btn-primary text-center text-sm mt-auto">Request a Quote</a>
-        </div>
-        <div class="border rounded-xl p-5 flex flex-col">
-          <h4 class="font-semibold mb-2">Digital Resilience Programme</h4>
-          <ul class="text-sm text-slate-500 space-y-1 mb-4 flex-1">
-            <li>Cybersecurity</li>
-            <li>AI Governance</li>
-            <li>Data Protection</li>
-            <li>Staff Training</li>
-            <li>Governance Frameworks</li>
-          </ul>
-          <a id="quote-drp" href="#" class="btn-primary text-center text-sm mt-auto">Request a Quote</a>
+
+        <!-- Stat tiles -->
+        <div class="grid grid-cols-2 gap-3 md:w-56">
+          <div class="stat-tile">
+            <p class="text-2xl font-bold text-white" id="stat-categories">—</p>
+            <p class="text-xs text-slate-400 mt-1">Areas Assessed</p>
+          </div>
+          <div class="stat-tile">
+            <p class="text-2xl font-bold" id="stat-critical" style="color:#F87171">—</p>
+            <p class="text-xs text-slate-400 mt-1">Critical Gaps</p>
+          </div>
+          <div class="stat-tile col-span-2">
+            <p class="text-xs text-slate-400 mb-1">Assessment Completeness</p>
+            <div class="cat-bar-track" style="background:rgba(255,255,255,0.08)">
+              <div id="completeness-bar" class="cat-bar-fill" style="background:#2563EB; width:0%"></div>
+            </div>
+            <p class="text-xs text-slate-300 mt-1 font-semibold" id="completeness-text">—</p>
+          </div>
         </div>
       </div>
-      <div class="flex flex-wrap justify-center gap-4 mt-8">
-        <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp">Talk to an Expert</a>
-        <a id="email-link" href="#" class="btn-secondary">Email Us</a>
-        <a href="https://calendly.com/wakara-technologies" target="_blank" class="btn-primary">Book Consultation</a>
-        <a href="https://calendly.com/wakara-technologies" target="_blank" class="btn-secondary">Schedule Discovery Call</a>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="max-w-6xl mx-auto px-6 py-10 space-y-8">
+
+    <!-- Charts row -->
+    <div>
+      <p class="section-label">Risk Analysis</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="report-card p-6">
+          <h3 class="text-sm font-bold text-slate-700 mb-1">Risk Profile Radar</h3>
+          <p class="text-xs text-slate-400 mb-4">Relative exposure across security domains</p>
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div class="report-card p-6">
+          <h3 class="text-sm font-bold text-slate-700 mb-1">Category Breakdown</h3>
+          <p class="text-xs text-slate-400 mb-4">Score per security domain (0–100)</p>
+          <canvas id="categoryChart"></canvas>
+        </div>
       </div>
     </div>
-  </section>
-</main>
+
+    <!-- Category score table -->
+    <div>
+      <p class="section-label">Domain Scores</p>
+      <div class="report-card overflow-hidden">
+        <div id="domain-rows" class="divide-y divide-slate-100"></div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div>
+      <p class="section-label">Recognition</p>
+      <div class="report-card p-6">
+        <h3 class="text-sm font-bold text-slate-700 mb-4">Badges Earned</h3>
+        <div id="badges-container" class="flex flex-wrap gap-2"></div>
+        <p id="no-badges" class="hidden text-sm text-slate-400">Complete more scenarios well to earn badges next time!</p>
+      </div>
+    </div>
+
+    <!-- PDF report form -->
+    <div>
+      <p class="section-label">Full Report</p>
+      <div class="report-card p-8">
+        <div class="flex flex-col md:flex-row md:items-start gap-8">
+          <div class="md:w-64 flex-shrink-0">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-blue-600 text-xl">📄</span>
+              <h3 class="text-base font-bold text-slate-800">Get Your PDF Report</h3>
+            </div>
+            <p class="text-sm text-slate-500 leading-relaxed">Your personalised security report includes a full action plan, priority recommendations, and remediation roadmap.</p>
+            <ul class="mt-4 space-y-1.5 text-xs text-slate-500">
+              <li class="flex gap-2"><span class="text-green-500">✓</span> Executive summary</li>
+              <li class="flex gap-2"><span class="text-green-500">✓</span> Prioritised action plan</li>
+              <li class="flex gap-2"><span class="text-green-500">✓</span> Domain-by-domain findings</li>
+              <li class="flex gap-2"><span class="text-green-500">✓</span> Remediation roadmap</li>
+            </ul>
+          </div>
+          <hr class="report-divider md:hidden" />
+          <div class="flex-1">
+            <form id="lead-form" class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Full Name *</label>
+                <input type="text" id="lead-name" class="report-input" placeholder="Jane Smith" />
+                <p class="text-red-500 text-xs mt-1 hidden" id="err-name"></p>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Company Name *</label>
+                <input type="text" id="lead-company" class="report-input" placeholder="Acme Ltd" />
+                <p class="text-red-500 text-xs mt-1 hidden" id="err-company"></p>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Email Address *</label>
+                <input type="email" id="lead-email" class="report-input" placeholder="jane@acme.com" />
+                <p class="text-red-500 text-xs mt-1 hidden" id="err-email"></p>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Phone Number *</label>
+                <input type="tel" id="lead-phone" class="report-input" placeholder="+254 700 000 000" />
+                <p class="text-red-500 text-xs mt-1 hidden" id="err-phone"></p>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Website</label>
+                <input type="text" id="lead-website" class="report-input" placeholder="www.acme.com" />
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600 block mb-1">Number of Employees</label>
+                <input type="text" id="lead-employees" class="report-input" placeholder="e.g. 50" />
+              </div>
+              <div class="md:col-span-2 flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="button" id="preview-btn" class="btn-secondary flex-1">Preview Report</button>
+                <button type="submit" class="btn-primary flex-1">⬇ Download My PDF Report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div>
+      <p class="section-label">Next Steps</p>
+      <div class="report-card p-8 mb-2">
+        <div class="text-center mb-8">
+          <h3 class="text-lg font-bold text-slate-800">Work With Our Security Experts</h3>
+          <p class="text-sm text-slate-500 mt-1">Tailored engagements designed for East African SMEs and enterprises</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="tier-card">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Starter</p>
+            <h4 class="font-bold text-slate-800 text-base mb-3">Security Review</h4>
+            <div class="flex-1 space-y-0.5 mb-6">
+              <div class="tier-check">60-minute expert consultation</div>
+              <div class="tier-check">Assessment report review</div>
+              <div class="tier-check">Priority action list</div>
+            </div>
+            <a id="quote-starter" href="#" class="btn-secondary w-full text-center text-sm">Request a Quote</a>
+          </div>
+          <div class="tier-card featured">
+            <span class="tier-badge">Most Popular</span>
+            <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">SME</p>
+            <h4 class="font-bold text-slate-800 text-base mb-3">Security Roadmap</h4>
+            <div class="flex-1 space-y-0.5 mb-6">
+              <div class="tier-check">Full assessment review</div>
+              <div class="tier-check">12-month security roadmap</div>
+              <div class="tier-check">Policy templates included</div>
+              <div class="tier-check">Follow-up support</div>
+            </div>
+            <a id="quote-sme" href="#" class="btn-primary w-full text-center text-sm">Request a Quote</a>
+          </div>
+          <div class="tier-card">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Enterprise</p>
+            <h4 class="font-bold text-slate-800 text-base mb-3">Digital Resilience Programme</h4>
+            <div class="flex-1 space-y-0.5 mb-6">
+              <div class="tier-check">Cybersecurity programme</div>
+              <div class="tier-check">AI Governance framework</div>
+              <div class="tier-check">Data Protection compliance</div>
+              <div class="tier-check">Staff security training</div>
+              <div class="tier-check">Governance frameworks</div>
+            </div>
+            <a id="quote-drp" href="#" class="btn-secondary w-full text-center text-sm">Request a Quote</a>
+          </div>
+        </div>
+
+        <!-- CTA bar -->
+        <div class="cta-bar mt-8 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p class="text-white font-semibold text-sm">Ready to strengthen your security posture?</p>
+            <p class="text-slate-400 text-xs mt-0.5">Our team responds within one business day.</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a id="whatsapp-link" href="#" target="_blank" class="btn-whatsapp text-sm py-2.5 px-5">💬 WhatsApp Us</a>
+            <a id="email-link" href="#" class="btn-secondary text-sm py-2 px-4" style="border-color:rgba(255,255,255,0.2);color:#fff;background:rgba(255,255,255,0.06);">Email Us</a>
+            <a href="https://calendly.com/wakara-technologies" target="_blank" class="btn-primary text-sm py-2 px-4">Book Consultation</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main content -->
+
+  <div class="conf-footer">
+    CONFIDENTIAL — This report is intended solely for the recipient organisation. Generated by Wakara Secure360 &nbsp;·&nbsp; Wakara Technologies Ltd &nbsp;·&nbsp; wakaratech.com
+  </div>
+
+</div><!-- /dashboard -->
 
 <script src="scoring.js?v=2"></script>
 <script src="app.js?v=2"></script>
@@ -155,14 +542,81 @@ if (!session) {
   document.getElementById('dashboard').classList.remove('hidden');
   const { results, badges } = session;
 
-  document.getElementById('overall-score').textContent = results.overall;
-  const riskLabel = document.getElementById('risk-label');
-  riskLabel.textContent = results.riskLevel.label;
-  riskLabel.style.backgroundColor = results.riskLevel.color;
+  // Report date
+  document.getElementById('report-date').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 
+  // Overall score + ring
+  document.getElementById('overall-score').textContent = results.overall;
+  const circumference = 2 * Math.PI * 68;
+  const offset = circumference - (results.overall / 100) * circumference;
+  const ringFill = document.getElementById('ring-fill');
+  // Color ring by risk
+  const ringColor = results.overall >= 70 ? '#16A34A' : results.overall >= 50 ? '#D97706' : results.overall >= 30 ? '#EA580C' : '#DC2626';
+  ringFill.style.stroke = ringColor;
+  setTimeout(() => { ringFill.style.strokeDashoffset = offset; }, 100);
+
+  // Risk badge
+  const riskLabel = document.getElementById('risk-label');
+  riskLabel.style.backgroundColor = results.riskLevel.color + '22';
+  riskLabel.style.border = `1px solid ${results.riskLevel.color}55`;
+  riskLabel.style.color = results.riskLevel.color;
+  document.getElementById('risk-label-text').textContent = results.riskLevel.label;
+
+  // Risk summary text
+  const summaries = {
+    'Critical': 'Immediate action required. Your organisation has significant security gaps that expose it to a high likelihood of a damaging cyber incident.',
+    'High': 'Urgent attention needed. Several critical controls are missing or weak. Prioritise remediation before a breach occurs.',
+    'Medium': 'Moderate risk exposure. Core controls are partially in place but important gaps remain. A structured remediation plan is recommended.',
+    'Low': 'Good security posture. Foundational controls are in place. Continue strengthening and monitoring your defences.',
+  };
+  const summary = Object.keys(summaries).find(k => results.riskLevel.label && results.riskLevel.label.includes(k));
+  document.getElementById('risk-summary').textContent = summaries[summary] || 'Review your results below and follow the recommended actions.';
+
+  // Stat tiles
+  const catKeys = Object.keys(results.categories || {});
+  document.getElementById('stat-categories').textContent = catKeys.length || '—';
+  const criticalCount = catKeys.filter(k => (results.categories[k] || 0) < 40).length;
+  document.getElementById('stat-critical').textContent = criticalCount;
+  document.getElementById('completeness-bar').style.width = '100%';
+  document.getElementById('completeness-text').textContent = '100% Complete';
+
+  // Charts
   Charts.renderRadarChart('radarChart', results);
   Charts.renderCategoryChart('categoryChart', results);
 
+  // Domain rows
+  const domainRows = document.getElementById('domain-rows');
+  if (catKeys.length) {
+    catKeys.forEach(key => {
+      const score = results.categories[key] || 0;
+      const level = score >= 70 ? { label: 'Good', color: '#16A34A', bg: '#DCFCE7' }
+                  : score >= 50 ? { label: 'Moderate', color: '#D97706', bg: '#FEF3C7' }
+                  : score >= 30 ? { label: 'High Risk', color: '#EA580C', bg: '#FFEDD5' }
+                  : { label: 'Critical', color: '#DC2626', bg: '#FEE2E2' };
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-4 px-6 py-4';
+      row.innerHTML = `
+        <div class="w-40 flex-shrink-0">
+          <p class="text-sm font-semibold text-slate-700">${key}</p>
+        </div>
+        <div class="cat-bar-track">
+          <div class="cat-bar-fill" style="width:0%; background:${level.color}" data-target="${score}"></div>
+        </div>
+        <span class="text-sm font-bold text-slate-700 w-10 text-right">${score}</span>
+        <span class="level-pill flex-shrink-0" style="color:${level.color}; background:${level.bg}">${level.label}</span>
+      `;
+      domainRows.appendChild(row);
+    });
+    setTimeout(() => {
+      domainRows.querySelectorAll('.cat-bar-fill').forEach(el => {
+        el.style.width = el.dataset.target + '%';
+      });
+    }, 200);
+  } else {
+    domainRows.innerHTML = '<p class="text-sm text-slate-400 px-6 py-4">No category data available.</p>';
+  }
+
+  // Badges
   const badgesContainer = document.getElementById('badges-container');
   if (badges.length) {
     badgesContainer.innerHTML = badges.map(b => `<span class="badge-pill">${b.icon} ${b.label}</span>`).join('');
@@ -170,20 +624,20 @@ if (!session) {
     document.getElementById('no-badges').classList.remove('hidden');
   }
 
+  // Links
   document.getElementById('whatsapp-link').href = App.whatsappLink(
     'Hello Wakara Technologies. I completed the Secure360 assessment and would like a consultation.'
   );
-
   document.getElementById('email-link').href = App.mailtoLink(
     'Secure360 Consultation Enquiry',
     `Hello Wakara Technologies, I completed the Secure360 assessment with an overall score of ${results.overall}/100 (${results.riskLevel.label}) and would like a consultation.`
   );
-
   const quoteBody = `Hello Wakara Technologies, I completed the Secure360 assessment with an overall score of ${results.overall}/100 (${results.riskLevel.label}) and would like to request a quote.`;
   document.getElementById('quote-starter').href = App.mailtoLink('Quote Request – Starter Security Review', quoteBody);
   document.getElementById('quote-sme').href = App.mailtoLink('Quote Request – SME Security Roadmap', quoteBody);
   document.getElementById('quote-drp').href = App.mailtoLink('Quote Request – Digital Resilience Programme', quoteBody);
 
+  // Form
   function getLeadFromForm() {
     return {
       name: document.getElementById('lead-name').value,
@@ -219,7 +673,6 @@ if (!session) {
     e.preventDefault();
     const lead = getLeadFromForm();
     if (!validateAndShowErrors(lead)) return;
-
     LeadCapture.saveLead(lead);
     PDFReport.generatePDFReport(lead, results, badges, 'radarChart');
   });
