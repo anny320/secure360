@@ -264,30 +264,54 @@ function buildReportDoc(lead, results, badges, radarChartCanvasId) {
   addSectionHeading(doc, 'Consultation Options', margin, 70);
 
   const offers = [
-    ['Starter Security Review — KES 20,000', '60-minute consultation, report review, priority actions'],
-    ['SME Security Roadmap — KES 60,000', 'Assessment review, security roadmap, templates, follow-up support'],
-    ['Digital Resilience Programme — Custom Pricing', 'Cybersecurity, AI Governance, Data Protection, Staff Training, Governance Frameworks']
+    ['Starter Security Review', '60-minute consultation, report review, priority actions'],
+    ['SME Security Roadmap', 'Assessment review, security roadmap, templates, follow-up support'],
+    ['Digital Resilience Programme', 'Cybersecurity, AI Governance, Data Protection, Staff Training, Governance Frameworks']
   ];
 
   y = 105;
   offers.forEach(([title, desc]) => {
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y - 14, contentWidth, 56, 5, 5, 'F');
+
     doc.setFontSize(13);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text(title, margin, y);
+    doc.text(title, margin + 14, y);
+
     doc.setFont(undefined, 'normal');
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
-    y += 18;
-    doc.text(doc.splitTextToSize(desc, contentWidth), margin, y);
-    y += 45;
+    y += 16;
+    doc.text(doc.splitTextToSize(desc, contentWidth - 28), margin + 14, y);
+
+    // Request a Quote label
+    const labelW = 110;
+    doc.setFillColor(37, 99, 235);
+    doc.roundedRect(margin + contentWidth - labelW - 14, y - 28, labelW, 22, 5, 5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'bold');
+    doc.text('Request a Quote', margin + contentWidth - labelW - 7, y - 13);
+    doc.setFont(undefined, 'normal');
+
+    y += 40;
   });
 
   doc.setFontSize(11);
+  doc.setTextColor(15, 23, 42);
+  doc.setFont(undefined, 'bold');
+  doc.text('Contact us to request a quote:', margin, y + 10);
+  doc.setFont(undefined, 'normal');
+  y += 28;
   doc.setTextColor(37, 99, 235);
-  doc.text('Talk to an Expert: wa.me/254117784724', margin, y);
+  doc.text('WhatsApp: wa.me/254117784724', margin, y);
   y += 18;
   doc.text('Email: wakaratech@gmail.com', margin, y);
+  y += 18;
+  doc.setTextColor(100, 116, 139);
+  doc.setFontSize(10);
+  doc.text('We respond within one business day.', margin, y);
 
   stampFooters(doc, margin, pageWidth, pageHeight);
   return doc;
